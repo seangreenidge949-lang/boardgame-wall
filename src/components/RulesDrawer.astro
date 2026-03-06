@@ -66,6 +66,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
+        <nav id="rules-toc" class="rules-toc mt-4 hidden"></nav>
         <div id="rules-full" class="rules-text mt-4 hidden"></div>
       </section>
     </div>
@@ -192,6 +193,63 @@
     margin: 1.25rem 0;
   }
 
+  .rules-text :global(.rules-img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin: 0.75rem 0;
+  }
+
+  .rules-text :global(figure) {
+    margin: 1rem 0;
+    text-align: center;
+  }
+
+  .rules-text :global(figcaption) {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    margin-top: 0.4rem;
+    font-style: italic;
+  }
+
+  .rules-text :global(em) {
+    font-style: italic;
+    color: var(--color-text-secondary);
+  }
+
+  .rules-toc {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .rules-toc :global(.toc-title) {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.5rem;
+  }
+
+  .rules-toc :global(a) {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--color-accent-purple);
+    text-decoration: none;
+    padding: 0.2rem 0;
+    transition: color 150ms;
+  }
+
+  .rules-toc :global(a:hover) {
+    color: var(--color-text-primary);
+  }
+
+  .rules-toc :global(a.toc-sub) {
+    padding-left: 1rem;
+    color: var(--color-text-secondary);
+  }
+
   /* Expand button */
   .rules-expand-btn {
     display: flex;
@@ -245,20 +303,30 @@
   const fullSection = document.getElementById('rules-full-section')!
   const fullToggle = document.getElementById('rules-full-toggle')!
   const fullEl = document.getElementById('rules-full')!
+  const tocEl = document.getElementById('rules-toc')!
 
   /**
-   * Minimal markdown-to-HTML renderer for trusted static content.
-   * Only used with developer-authored rules data from local JSON files.
+   * Markdown-to-HTML renderer for trusted static content.
+   * Supports: headers, bold, italic, images, nested lists, tables, hr, anchor IDs.
    */
   function md(text: string): string {
     let html = text
-      // Headers
-      .replace(/^#### (.+)$/gm, '<h4>$1</h4>')
-      .replace(/^### (.+)$/gm, '<h4>$1</h4>')
-      .replace(/^## (.+)$/gm, '<h3>$1</h3>')
-      .replace(/^# (.+)$/gm, '<h2>$1</h2>')
-      // Bold
+      // Images: ![alt](url) or ![alt](url "caption")
+      .replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g,
+        (_m, alt: string, url: string, caption: string) => {
+          const img = `<img src="${url}" alt="${alt}" loading="lazy" class="rules-img">`
+          return caption
+            ? `<figure>${img}<figcaption>${caption}</figcaption></figure>`
+            : img
+        })
+      // Headers with auto-generated anchor IDs
+      .replace(/^#### (.+)$/gm, (_m, t: string) => `<h4 id="${slugify(t)}">${t}</h4>`)
+      .replace(/^### (.+)$/gm, (_m, t: string) => `<h4 id="${slugify(t)}">${t}</h4>`)
+      .replace(/^## (.+)$/gm, (_m, t: string) => `<h3 id="${slugify(t)}">${t}</h3>`)
+      .replace(/^# (.+)$/gm, (_m, t: string) => `<h2 id="${slugify(t)}">${t}</h2>`)
+      // Bold & italic
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
       // HR
       .replace(/^---$/gm, '<hr>')
 
@@ -282,14 +350,12 @@
       return table + '</tbody></table>'
     })
 
-    // Lists
-    html = html.replace(/(^- .+$(\n- .+$)*)/gm, (block) => {
-      const items = block.split('\n').map(l => `<li>${l.replace(/^- /, '')}</li>`).join('')
-      return `<ul>${items}</ul>`
+    // Nested lists: supports 2 levels with 2-space or 4-space indent
+    html = html.replace(/((?:^[\t ]*[-*] .+$\n?)+)/gm, (block) => {
+      return parseList(block.trimEnd(), false)
     })
-    html = html.replace(/(^\d+\. .+$(\n\d+\. .+$)*)/gm, (block) => {
-      const items = block.split('\n').map(l => `<li>${l.replace(/^\d+\. /, '')}</li>`).join('')
-      return `<ol>${items}</ol>`
+    html = html.replace(/((?:^[\t ]*\d+\. .+$\n?)+)/gm, (block) => {
+      return parseList(block.trimEnd(), true)
     })
 
     // Paragraphs: wrap remaining plain text lines
@@ -303,7 +369,50 @@
     return html
   }
 
+  function slugify(text: string): string {
+    return text.replace(/[^\w\u4e00-\u9fff]+/g, '-').replace(/^-|-$/g, '').toLowerCase()
+  }
+
+  function parseList(block: string, ordered: boolean): string {
+    const lines = block.split('\n')
+    const tag = ordered ? 'ol' : 'ul'
+    const itemRe = ordered ? /^(\s*)\d+\.\s+(.+)$/ : /^(\s*)[-*]\s+(.+)$/
+    let result = `<${tag}>`
+    let inSub = false
+
+    for (const line of lines) {
+      const m = line.match(itemRe)
+      if (!m) continue
+      const indent = m[1].length
+      const content = m[2]
+      if (indent >= 2) {
+        if (!inSub) { result += `<${tag}>`; inSub = true }
+        result += `<li>${content}</li>`
+      } else {
+        if (inSub) { result += `</${tag}>`; inSub = false }
+        result += `<li>${content}</li>`
+      }
+    }
+    if (inSub) result += `</${tag}>`
+    result += `</${tag}>`
+    return result
+  }
+
+  function buildToc(container: HTMLElement): string {
+    const headings = container.querySelectorAll('h2, h3, h4')
+    if (headings.length < 3) return ''
+    let toc = '<div class="toc-title">目录</div>'
+    headings.forEach(h => {
+      const id = h.id
+      const text = h.textContent || ''
+      const cls = h.tagName === 'H2' ? '' : ' class="toc-sub"'
+      if (id) toc += `<a href="#${id}"${cls}>${text}</a>`
+    })
+    return toc
+  }
+
   function openDrawer(data: any) {
+    // All content is developer-authored from local JSON files (trusted, no XSS risk)
     titleEl.textContent = data.gameName || '游戏规则'
     summaryEl.innerHTML = md(data.summary || '')
 
@@ -319,7 +428,9 @@
     if (data.fullText) {
       fullSection.classList.remove('hidden')
       fullEl.innerHTML = md(data.fullText)
+      tocEl.innerHTML = buildToc(fullEl)
       fullEl.classList.add('hidden')
+      tocEl.classList.add('hidden')
       fullToggle.classList.remove('expanded')
     } else {
       fullSection.classList.add('hidden')
@@ -347,7 +458,27 @@
     })
   }
   setupToggle(detailedToggle, detailedEl)
-  setupToggle(fullToggle, fullEl)
+  // Full text toggle also shows/hides the TOC
+  fullToggle.addEventListener('click', () => {
+    const isHidden = fullEl.classList.contains('hidden')
+    fullEl.classList.toggle('hidden')
+    tocEl.classList.toggle('hidden')
+    fullToggle.classList.toggle('expanded', isHidden)
+  })
+
+  // TOC smooth scroll within the drawer panel
+  tocEl.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement
+    if (target.tagName === 'A') {
+      e.preventDefault()
+      const href = target.getAttribute('href')
+      if (!href) return
+      const heading = document.querySelector(href)
+      if (heading) {
+        heading.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }
+  })
 
   // Listen for open event from GameModal
   window.addEventListener('open-rules', ((e: CustomEvent) => {
