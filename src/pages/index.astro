@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro'
 import Header from '../components/Header.astro'
 import GameCard from '../components/GameCard.astro'
 import GameModal from '../components/GameModal.astro'
+import RulesDrawer from '../components/RulesDrawer.astro'
 
 // Load game data
 let games: any[] = []
@@ -11,6 +12,14 @@ try {
   games = data.default || data
 } catch {
   games = []
+}
+
+// Load rules data (build-time)
+const rulesMap: Record<number, any> = {}
+const rulesFiles = import.meta.glob('../../data/rules/*.json', { eager: true })
+for (const [path, mod] of Object.entries(rulesFiles)) {
+  const rules = (mod as any).default || mod
+  if (rules.gameId) rulesMap[rules.gameId] = rules
 }
 ---
 
@@ -39,6 +48,7 @@ try {
             players={game.players}
             playingTime={game.playingTime}
             comment={game.comment}
+            hasRules={game.hasRules}
           />
         ))}
       </div>
@@ -55,6 +65,12 @@ try {
   </footer>
 
   <GameModal />
+  <RulesDrawer />
+
+  <!-- Inject rules data for client-side access -->
+  <script is:inline define:vars={{ rulesMap }}>
+    window.__RULES_DATA__ = rulesMap
+  </script>
 
   <script>
     // Search filter

@@ -56,6 +56,24 @@
 
       <!-- Comment -->
       <p id="modal-comment" class="modal-stagger max-w-md text-lg italic leading-relaxed text-text-primary/80"></p>
+
+      <!-- Rules Button -->
+      <div id="modal-rules-area" class="modal-stagger w-full max-w-md">
+        <button
+          id="modal-rules-btn"
+          class="hidden w-full rounded-xl bg-accent-purple/15 px-5 py-3 text-sm font-medium text-accent-purple transition-all hover:bg-accent-purple/25 hover:shadow-lg hover:shadow-accent-purple/10"
+        >
+          <span class="inline-flex items-center gap-2">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            查看规则
+          </span>
+        </button>
+        <p id="modal-rules-placeholder" class="hidden text-center text-sm text-text-secondary/60">
+          📖 规则整理中，敬请期待
+        </p>
+      </div>
     </div>
   </div>
 </div>
@@ -152,6 +170,7 @@
   .modal-active .modal-stagger:nth-child(4) { transition-delay: 300ms; }
   .modal-active .modal-stagger:nth-child(5) { transition-delay: 350ms; }
   .modal-active .modal-stagger:nth-child(6) { transition-delay: 400ms; }
+  .modal-active .modal-stagger:nth-child(7) { transition-delay: 450ms; }
 </style>
 
 <script>
@@ -169,8 +188,13 @@
   const elPlayers = document.getElementById('modal-players')!
   const elTime = document.getElementById('modal-time')!
   const elComment = document.getElementById('modal-comment')!
+  const elRulesBtn = document.getElementById('modal-rules-btn')!
+  const elRulesPlaceholder = document.getElementById('modal-rules-placeholder')!
+
+  let currentGameId: number | null = null
 
   function openModal(data: any) {
+    currentGameId = data.id || null
     elImage.src = data.image
     elImage.alt = data.nameCn || data.name
     elRank.textContent = `#${String(data.rank).padStart(2, '0')} · BGG 排名`
@@ -181,6 +205,15 @@
     elPlayers.textContent = `${data.players} 人`
     elTime.textContent = `${data.playingTime} 分钟`
     elComment.textContent = data.comment || ''
+
+    // Show/hide rules button
+    if (data.hasRules) {
+      elRulesBtn.classList.remove('hidden')
+      elRulesPlaceholder.classList.add('hidden')
+    } else {
+      elRulesBtn.classList.add('hidden')
+      elRulesPlaceholder.classList.remove('hidden')
+    }
 
     // Remove closing state if present, then activate
     modal.classList.remove('modal-closing')
@@ -228,5 +261,14 @@
   })
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeModal()
+  })
+
+  // Rules button
+  elRulesBtn.addEventListener('click', () => {
+    if (currentGameId == null) return
+    const rulesData = (window as any).__RULES_DATA__?.[currentGameId]
+    if (rulesData) {
+      window.dispatchEvent(new CustomEvent('open-rules', { detail: rulesData }))
+    }
   })
 </script>

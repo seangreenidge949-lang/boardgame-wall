@@ -11,16 +11,17 @@ interface Props {
   players: string
   playingTime: string
   comment: string
+  hasRules?: boolean
 }
 
-const { rank, name, nameCn, year, rating, thumbnail, image, players, playingTime, comment } = Astro.props
+const { id, rank, name, nameCn, year, rating, thumbnail, image, players, playingTime, comment, hasRules } = Astro.props
 const displayName = nameCn || name
 const ratingColor = rating >= 8 ? 'text-accent-gold' : rating >= 7 ? 'text-text-primary' : 'text-text-secondary'
 ---
 
 <button
   class="game-card group relative flex w-full cursor-pointer flex-col overflow-hidden rounded-xl bg-bg-card text-left transition-all duration-300 hover:-translate-y-1 hover:bg-bg-card-hover hover:shadow-lg hover:shadow-black/30"
-  data-game={JSON.stringify({ rank, name, nameCn, year, rating, image, players, playingTime, comment })}
+  data-game={JSON.stringify({ id, rank, name, nameCn, year, rating, image, players, playingTime, comment, hasRules: !!hasRules })}
 >
   <!-- Cover Image -->
   <div class="relative aspect-[3/4] w-full overflow-hidden">

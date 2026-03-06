@@ -1,0 +1,371 @@
+---
+---
+
+<!-- Rules Drawer Overlay -->
+<div id="rules-drawer" class="rules-overlay">
+  <div id="rules-panel" class="rules-panel">
+    <!-- Header -->
+    <div class="sticky top-0 z-10 flex items-center gap-3 border-b border-white/10 bg-bg-card px-5 py-4 backdrop-blur-md">
+      <button id="rules-back" class="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-white/10 hover:text-text-primary" aria-label="返回">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <div class="min-w-0 flex-1">
+        <h3 id="rules-title" class="truncate text-base font-bold"></h3>
+        <p class="text-xs text-text-secondary">游戏规则</p>
+      </div>
+      <button id="rules-close" class="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-white/10 hover:text-text-primary" aria-label="关闭">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div id="rules-content" class="flex-1 overflow-y-auto px-5 py-5">
+      <!-- Summary Section (always visible) -->
+      <section id="rules-summary-section">
+        <div class="mb-4 flex items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-accent-purple/15 px-3 py-1 text-xs font-medium text-accent-purple">
+            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            快速了解
+          </span>
+        </div>
+        <div id="rules-summary" class="rules-text"></div>
+      </section>
+
+      <!-- Detailed Section (expandable) -->
+      <section id="rules-detailed-section" class="mt-6 hidden">
+        <button id="rules-detailed-toggle" class="rules-expand-btn">
+          <span class="inline-flex items-center gap-1.5">
+            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            展开详细规则
+          </span>
+          <svg class="rules-chevron h-4 w-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div id="rules-detailed" class="rules-text mt-4 hidden"></div>
+      </section>
+
+      <!-- Full Text Section (expandable) -->
+      <section id="rules-full-section" class="mt-6 hidden">
+        <button id="rules-full-toggle" class="rules-expand-btn">
+          <span class="inline-flex items-center gap-1.5">
+            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            查看完整规则原文
+          </span>
+          <svg class="rules-chevron h-4 w-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div id="rules-full" class="rules-text mt-4 hidden"></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<style>
+  .rules-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(0, 0, 0, 0);
+    pointer-events: none;
+    transition: background 250ms ease-out;
+  }
+
+  .rules-overlay.rules-active {
+    background: rgba(0, 0, 0, 0.5);
+    pointer-events: auto;
+  }
+
+  .rules-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(560px, 100vw);
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-bg-card);
+    box-shadow: -8px 0 30px rgba(0, 0, 0, 0.4);
+    transform: translateX(100%);
+    transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .rules-active .rules-panel {
+    transform: translateX(0);
+  }
+
+  .rules-closing .rules-panel {
+    transform: translateX(100%);
+    transition: transform 200ms ease-in;
+  }
+
+  .rules-closing {
+    transition: background 150ms ease-in;
+  }
+
+  /* Text content styling */
+  .rules-text {
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+    line-height: 1.75;
+  }
+
+  .rules-text :global(h2) {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-primary);
+  }
+
+  .rules-text :global(h3) {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 1.25rem;
+    margin-bottom: 0.4rem;
+    color: var(--color-text-primary);
+  }
+
+  .rules-text :global(h4) {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    margin-bottom: 0.3rem;
+    color: var(--color-text-primary);
+  }
+
+  .rules-text :global(p) {
+    margin-bottom: 0.75rem;
+  }
+
+  .rules-text :global(strong) {
+    color: var(--color-accent-gold);
+    font-weight: 600;
+  }
+
+  .rules-text :global(ul),
+  .rules-text :global(ol) {
+    padding-left: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .rules-text :global(li) {
+    margin-bottom: 0.3rem;
+  }
+
+  .rules-text :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.75rem 0;
+    font-size: 0.85rem;
+  }
+
+  .rules-text :global(th) {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .rules-text :global(td) {
+    padding: 0.4rem 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--color-text-secondary);
+  }
+
+  .rules-text :global(hr) {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin: 1.25rem 0;
+  }
+
+  /* Expand button */
+  .rules-expand-btn {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 150ms ease;
+  }
+
+  .rules-expand-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: var(--color-text-primary);
+  }
+
+  .rules-expand-btn.expanded {
+    border-color: var(--color-accent-purple);
+    color: var(--color-accent-purple);
+    background: rgba(108, 99, 255, 0.08);
+  }
+
+  .rules-expand-btn.expanded .rules-chevron {
+    transform: rotate(180deg);
+  }
+
+  @media (max-width: 640px) {
+    .rules-panel {
+      width: 100vw;
+    }
+  }
+</style>
+
+<script>
+  const overlay = document.getElementById('rules-drawer')!
+  const backBtn = document.getElementById('rules-back')!
+  const closeBtn = document.getElementById('rules-close')!
+  const titleEl = document.getElementById('rules-title')!
+
+  const summaryEl = document.getElementById('rules-summary')!
+  const detailedSection = document.getElementById('rules-detailed-section')!
+  const detailedToggle = document.getElementById('rules-detailed-toggle')!
+  const detailedEl = document.getElementById('rules-detailed')!
+  const fullSection = document.getElementById('rules-full-section')!
+  const fullToggle = document.getElementById('rules-full-toggle')!
+  const fullEl = document.getElementById('rules-full')!
+
+  /**
+   * Minimal markdown-to-HTML renderer for trusted static content.
+   * Only used with developer-authored rules data from local JSON files.
+   */
+  function md(text: string): string {
+    let html = text
+      // Headers
+      .replace(/^#### (.+)$/gm, '<h4>$1</h4>')
+      .replace(/^### (.+)$/gm, '<h4>$1</h4>')
+      .replace(/^## (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^# (.+)$/gm, '<h2>$1</h2>')
+      // Bold
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      // HR
+      .replace(/^---$/gm, '<hr>')
+
+    // Process tables
+    html = html.replace(/(\|.+\|[\s\S]*?\n)(?=\n|$)/g, (block) => {
+      const lines = block.trim().split('\n').filter(l => l.trim())
+      if (lines.length < 2) return block
+      const parseRow = (line: string) =>
+        line.replace(/^\||\|$/g, '').split('|').map(c => c.trim())
+      const headers = parseRow(lines[0])
+      const isSep = (line: string) => parseRow(line).every(c => /^-+$/.test(c))
+      const dataStart = isSep(lines[1]) ? 2 : 1
+      let table = '<table><thead><tr>' +
+        headers.map(h => `<th>${h}</th>`).join('') +
+        '</tr></thead><tbody>'
+      for (let i = dataStart; i < lines.length; i++) {
+        if (isSep(lines[i])) continue
+        const cells = parseRow(lines[i])
+        table += '<tr>' + cells.map(c => `<td>${c}</td>`).join('') + '</tr>'
+      }
+      return table + '</tbody></table>'
+    })
+
+    // Lists
+    html = html.replace(/(^- .+$(\n- .+$)*)/gm, (block) => {
+      const items = block.split('\n').map(l => `<li>${l.replace(/^- /, '')}</li>`).join('')
+      return `<ul>${items}</ul>`
+    })
+    html = html.replace(/(^\d+\. .+$(\n\d+\. .+$)*)/gm, (block) => {
+      const items = block.split('\n').map(l => `<li>${l.replace(/^\d+\. /, '')}</li>`).join('')
+      return `<ol>${items}</ol>`
+    })
+
+    // Paragraphs: wrap remaining plain text lines
+    html = html.split('\n').map(line => {
+      const trimmed = line.trim()
+      if (!trimmed) return ''
+      if (/^</.test(trimmed)) return trimmed
+      return `<p>${trimmed}</p>`
+    }).join('\n')
+
+    return html
+  }
+
+  function openDrawer(data: any) {
+    titleEl.textContent = data.gameName || '游戏规则'
+    summaryEl.innerHTML = md(data.summary || '')
+
+    if (data.detailed) {
+      detailedSection.classList.remove('hidden')
+      detailedEl.innerHTML = md(data.detailed)
+      detailedEl.classList.add('hidden')
+      detailedToggle.classList.remove('expanded')
+    } else {
+      detailedSection.classList.add('hidden')
+    }
+
+    if (data.fullText) {
+      fullSection.classList.remove('hidden')
+      fullEl.innerHTML = md(data.fullText)
+      fullEl.classList.add('hidden')
+      fullToggle.classList.remove('expanded')
+    } else {
+      fullSection.classList.add('hidden')
+    }
+
+    document.getElementById('rules-content')!.scrollTop = 0
+    overlay.classList.remove('rules-closing')
+    void overlay.offsetHeight
+    overlay.classList.add('rules-active')
+  }
+
+  function closeDrawer() {
+    if (!overlay.classList.contains('rules-active')) return
+    overlay.classList.remove('rules-active')
+    overlay.classList.add('rules-closing')
+    setTimeout(() => overlay.classList.remove('rules-closing'), 300)
+  }
+
+  // Toggle expand/collapse
+  function setupToggle(btn: HTMLElement, content: HTMLElement) {
+    btn.addEventListener('click', () => {
+      const isHidden = content.classList.contains('hidden')
+      content.classList.toggle('hidden')
+      btn.classList.toggle('expanded', isHidden)
+    })
+  }
+  setupToggle(detailedToggle, detailedEl)
+  setupToggle(fullToggle, fullEl)
+
+  // Listen for open event from GameModal
+  window.addEventListener('open-rules', ((e: CustomEvent) => {
+    const data = e.detail
+    const gameName = document.getElementById('modal-title')?.textContent || ''
+    openDrawer({ ...data, gameName })
+  }) as EventListener)
+
+  // Close handlers
+  backBtn.addEventListener('click', closeDrawer)
+  closeBtn.addEventListener('click', closeDrawer)
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeDrawer()
+  })
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('rules-active')) {
+      e.stopPropagation()
+      closeDrawer()
+    }
+  })
+</script>
