@@ -1,0 +1,73 @@
+---
+---
+
+<header class="sticky top-0 z-40 border-b border-white/5 bg-bg-primary/80 backdrop-blur-md">
+  <div class="mx-auto flex max-w-[1600px] items-center justify-between px-4 py-3 sm:px-6">
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-2 text-lg font-bold tracking-tight">
+      <span class="text-accent-gold">🎲</span>
+      <span>桌游评分墙</span>
+    </a>
+
+    <!-- Search -->
+    <div class="relative hidden sm:block">
+      <input
+        id="search-input"
+        type="text"
+        placeholder="搜索游戏..."
+        class="w-48 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-text-primary placeholder-text-secondary outline-none transition-all focus:w-64 focus:border-accent-purple/50 focus:ring-1 focus:ring-accent-purple/30 lg:w-64 lg:focus:w-80"
+      />
+      <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </div>
+
+    <!-- Mobile search toggle -->
+    <button id="mobile-search-toggle" class="rounded-lg p-2 text-text-secondary transition-colors hover:text-text-primary sm:hidden">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile search bar -->
+  <div id="mobile-search-bar" class="hidden border-t border-white/5 px-4 py-2 sm:hidden">
+    <input
+      id="mobile-search-input"
+      type="text"
+      placeholder="搜索游戏..."
+      class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-text-primary placeholder-text-secondary outline-none focus:border-accent-purple/50"
+    />
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('mobile-search-toggle')
+  const bar = document.getElementById('mobile-search-bar')
+  const mobileInput = document.getElementById('mobile-search-input') as HTMLInputElement
+  const desktopInput = document.getElementById('search-input') as HTMLInputElement
+
+  toggle?.addEventListener('click', () => {
+    bar?.classList.toggle('hidden')
+    if (!bar?.classList.contains('hidden')) {
+      mobileInput?.focus()
+    }
+  })
+
+  // Sync search inputs and dispatch custom event
+  function handleSearch(value: string) {
+    window.dispatchEvent(new CustomEvent('search', { detail: value.toLowerCase().trim() }))
+  }
+
+  desktopInput?.addEventListener('input', (e) => {
+    const val = (e.target as HTMLInputElement).value
+    mobileInput.value = val
+    handleSearch(val)
+  })
+
+  mobileInput?.addEventListener('input', (e) => {
+    const val = (e.target as HTMLInputElement).value
+    desktopInput.value = val
+    handleSearch(val)
+  })
+</script>

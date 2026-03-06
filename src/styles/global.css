@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg-primary: #0F0F13;
+  --color-bg-card: #1A1A24;
+  --color-bg-card-hover: #22222E;
+  --color-accent-gold: #F5C518;
+  --color-accent-purple: #6C63FF;
+  --color-text-primary: #E8E8ED;
+  --color-text-secondary: #8888A0;
+  --color-overlay: rgba(0, 0, 0, 0.7);
+
+  --font-sans: "Inter", "Noto Sans SC", system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: var(--color-accent-purple);
+    color: white;
+  }
+}

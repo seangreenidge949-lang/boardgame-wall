@@ -1,0 +1,52 @@
+---
+interface Props {
+  id: number
+  rank: number
+  name: string
+  nameCn: string
+  year: number
+  rating: number
+  thumbnail: string
+  image: string
+  players: string
+  playingTime: string
+  comment: string
+}
+
+const { rank, name, nameCn, year, rating, thumbnail, image, players, playingTime, comment } = Astro.props
+const displayName = nameCn || name
+const ratingColor = rating >= 8 ? 'text-accent-gold' : rating >= 7 ? 'text-text-primary' : 'text-text-secondary'
+---
+
+<button
+  class="game-card group relative flex w-full cursor-pointer flex-col overflow-hidden rounded-xl bg-bg-card text-left transition-all duration-300 hover:-translate-y-1 hover:bg-bg-card-hover hover:shadow-lg hover:shadow-black/30"
+  data-game={JSON.stringify({ rank, name, nameCn, year, rating, image, players, playingTime, comment })}
+>
+  <!-- Cover Image -->
+  <div class="relative aspect-[3/4] w-full overflow-hidden">
+    <img
+      src={thumbnail}
+      alt={displayName}
+      loading="lazy"
+      decoding="async"
+      class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+    />
+    <!-- Rank Badge -->
+    <span class="absolute left-2 top-2 rounded-md bg-black/60 px-2 py-0.5 text-xs font-bold tracking-wide text-white backdrop-blur-sm">
+      #{String(rank).padStart(2, '0')}
+    </span>
+  </div>
+
+  <!-- Info -->
+  <div class="flex flex-1 flex-col gap-1 p-3">
+    <h3 class="truncate text-sm font-medium leading-tight" title={displayName}>
+      {displayName}
+    </h3>
+    <div class="flex items-center justify-between">
+      <span class="text-xs text-text-secondary">{year}</span>
+      <span class={`inline-flex items-center rounded-md bg-accent-gold/15 px-2 py-0.5 text-xs font-bold ${ratingColor}`}>
+        {rating.toFixed(1)}
+      </span>
+    </div>
+  </div>
+</button>

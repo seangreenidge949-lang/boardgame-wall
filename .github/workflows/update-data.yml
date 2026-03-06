@@ -1,0 +1,34 @@
+name: Update BGG Data
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Every Sunday at midnight UTC
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: npm ci
+
+      - name: Fetch BGG data
+        run: npx tsx scripts/fetch-bgg-data.ts
+        env:
+          BGG_USERNAME: ${{ secrets.BGG_USERNAME }}
+          BGG_PASSWORD: ${{ secrets.BGG_PASSWORD }}
+
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/games.json
+          git diff --staged --quiet || git commit -m "chore: update BGG Top 100 data"
+          git push

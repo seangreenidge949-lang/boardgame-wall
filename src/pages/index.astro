@@ -1,0 +1,85 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Header from '../components/Header.astro'
+import GameCard from '../components/GameCard.astro'
+import GameModal from '../components/GameModal.astro'
+
+// Load game data
+let games: any[] = []
+try {
+  const data = await import('../../data/games.json')
+  games = data.default || data
+} catch {
+  games = []
+}
+---
+
+<Layout>
+  <Header />
+
+  <main class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
+    {games.length === 0 ? (
+      <div class="flex flex-col items-center justify-center gap-4 py-32 text-center">
+        <span class="text-6xl">🎲</span>
+        <h2 class="text-2xl font-bold">暂无数据</h2>
+        <p class="text-text-secondary">请先运行 <code class="rounded bg-white/10 px-2 py-0.5 text-sm">npx tsx scripts/fetch-bgg-data.ts</code> 获取 BGG 数据</p>
+      </div>
+    ) : (
+      <div id="game-grid" class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        {games.map((game) => (
+          <GameCard
+            id={game.id}
+            rank={game.rank}
+            name={game.name}
+            nameCn={game.nameCn}
+            year={game.year}
+            rating={game.rating}
+            thumbnail={game.thumbnail}
+            image={game.image}
+            players={game.players}
+            playingTime={game.playingTime}
+            comment={game.comment}
+          />
+        ))}
+      </div>
+    )}
+
+    <!-- No results message -->
+    <div id="no-results" class="hidden py-20 text-center">
+      <p class="text-lg text-text-secondary">未找到匹配的游戏</p>
+    </div>
+  </main>
+
+  <footer class="border-t border-white/5 py-6 text-center text-sm text-text-secondary">
+    <p>数据来源：<a href="https://boardgamegeek.com" target="_blank" rel="noopener" class="text-accent-purple hover:underline">BoardGameGeek</a></p>
+  </footer>
+
+  <GameModal />
+
+  <script>
+    // Search filter
+    window.addEventListener('search', ((e: CustomEvent) => {
+      const query = e.detail as string
+      const grid = document.getElementById('game-grid')
+      const noResults = document.getElementById('no-results')
+      if (!grid) return
+
+      const cards = grid.querySelectorAll('.game-card') as NodeListOf<HTMLElement>
+      let visible = 0
+
+      cards.forEach((card) => {
+        const data = JSON.parse(card.dataset.game || '{}')
+        const match = !query ||
+          (data.name?.toLowerCase().includes(query)) ||
+          (data.nameCn?.toLowerCase().includes(query))
+
+        card.style.display = match ? '' : 'none'
+        if (match) visible++
+      })
+
+      if (noResults) {
+        noResults.classList.toggle('hidden', visible > 0 || !query)
+      }
+    }) as EventListener)
+  </script>
+</Layout>
