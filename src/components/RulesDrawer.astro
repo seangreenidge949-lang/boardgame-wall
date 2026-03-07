@@ -4,8 +4,8 @@
 <!-- Rules Drawer Overlay -->
 <div id="rules-drawer" class="rules-overlay">
   <div id="rules-panel" class="rules-panel">
-    <!-- Header -->
-    <div class="sticky top-0 z-10 flex items-center gap-3 border-b border-white/10 bg-bg-card px-5 py-4 backdrop-blur-md">
+    <!-- Header: Normal Mode -->
+    <div id="rules-header-normal" class="sticky top-0 z-10 flex items-center gap-3 border-b border-white/10 bg-bg-card px-5 py-4 backdrop-blur-md">
       <button id="rules-back" class="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-white/10 hover:text-text-primary" aria-label="返回">
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -15,8 +15,39 @@
         <h3 id="rules-title" class="truncate text-base font-bold"></h3>
         <p class="text-xs text-text-secondary">游戏规则</p>
       </div>
+      <button id="rules-search-open" class="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-white/10 hover:text-text-primary" aria-label="搜索">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </button>
       <button id="rules-close" class="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-white/10 hover:text-text-primary" aria-label="关闭">
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Header: Search Mode -->
+    <div id="rules-header-search" class="sticky top-0 z-10 hidden items-center gap-2 border-b border-white/10 bg-bg-card px-4 py-3 backdrop-blur-md">
+      <div class="flex flex-1 items-center gap-2 rounded-lg bg-white/5 px-3 py-2">
+        <svg class="h-4 w-4 shrink-0 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input id="rules-search-input" type="text" placeholder="搜索规则内容..." class="w-full bg-transparent text-sm text-text-primary outline-none placeholder:text-text-secondary/50" />
+        <span id="rules-search-count" class="shrink-0 text-xs text-text-secondary"></span>
+      </div>
+      <button id="rules-search-prev" class="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-white/10 hover:text-text-primary disabled:opacity-30" aria-label="上一个" disabled>
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+        </svg>
+      </button>
+      <button id="rules-search-next" class="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-white/10 hover:text-text-primary disabled:opacity-30" aria-label="下一个" disabled>
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      <button id="rules-search-close" class="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-white/10 hover:text-text-primary" aria-label="关闭搜索">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
@@ -69,6 +100,37 @@
         <nav id="rules-toc" class="rules-toc mt-4 hidden"></nav>
         <div id="rules-full" class="rules-text mt-4 hidden"></div>
       </section>
+    </div>
+
+    <!-- AI Chat Panel -->
+    <div id="rules-chat" class="rules-chat">
+      <button id="rules-chat-toggle" class="rules-chat-toggle">
+        <span class="inline-flex items-center gap-1.5">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          </svg>
+          AI 规则问答
+        </span>
+        <svg id="rules-chat-chevron" class="h-4 w-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+        </svg>
+      </button>
+      <div id="rules-chat-body" class="rules-chat-body hidden flex flex-col">
+        <div id="rules-chat-messages" class="rules-chat-messages">
+          <div class="rules-chat-welcome">
+            <p>对规则有疑问？问我吧！</p>
+            <p class="text-xs text-text-secondary mt-1">AI 会引用规则原文回答</p>
+          </div>
+        </div>
+        <div class="rules-chat-input-area">
+          <input id="rules-chat-input" type="text" placeholder="例如：回合结束时可以做什么？" class="rules-chat-input" />
+          <button id="rules-chat-send" class="rules-chat-send" aria-label="发送">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19V5m0 0l-7 7m7-7l7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -283,6 +345,203 @@
     transform: rotate(180deg);
   }
 
+  /* Search highlight */
+  :global(mark.rules-highlight) {
+    background: rgba(245, 197, 24, 0.2);
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+
+  :global(mark.rules-highlight.active) {
+    background: rgba(245, 197, 24, 0.45);
+    box-shadow: 0 0 0 2px var(--color-accent-gold);
+    border-radius: 3px;
+  }
+
+  /* AI Chat Panel */
+  .rules-chat {
+    position: relative;
+    z-index: 5;
+    flex-shrink: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--color-bg-card);
+  }
+
+  .rules-chat-toggle {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-accent-purple);
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    transition: background 150ms;
+  }
+
+  .rules-chat-toggle:hover {
+    background: rgba(108, 99, 255, 0.06);
+  }
+
+  .rules-chat-toggle.expanded #rules-chat-chevron {
+    transform: rotate(180deg);
+  }
+
+  .rules-chat-body {
+    max-height: min(360px, 50vh);
+    overflow: hidden;
+  }
+
+  .rules-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.75rem 1.25rem;
+    min-height: 100px;
+    max-height: 260px;
+  }
+
+  .rules-chat-welcome {
+    text-align: center;
+    padding: 1.5rem 0;
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+  }
+
+  :global(.rules-msg) {
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  :global(.rules-msg-user) {
+    text-align: right;
+  }
+
+  :global(.rules-msg-user .rules-msg-bubble) {
+    display: inline-block;
+    background: var(--color-accent-purple);
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.75rem 0.75rem 0.25rem 0.75rem;
+    max-width: 85%;
+    text-align: left;
+  }
+
+  :global(.rules-msg-ai .rules-msg-bubble) {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--color-text-primary);
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.75rem 0.75rem 0.75rem 0.25rem;
+    max-width: 95%;
+  }
+
+  :global(.rules-msg-ai .rules-msg-bubble blockquote) {
+    border-left: 3px solid var(--color-accent-gold);
+    padding-left: 0.75rem;
+    margin: 0.5rem 0;
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+    font-style: italic;
+  }
+
+  :global(.rules-msg-ai .rules-msg-bubble p) {
+    margin-bottom: 0.4rem;
+  }
+
+  :global(.rules-msg-ai .rules-msg-bubble p:last-child) {
+    margin-bottom: 0;
+  }
+
+  :global(.rules-msg-loading .rules-msg-bubble) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+  }
+
+  :global(.rules-typing-dots) {
+    display: inline-flex;
+    gap: 3px;
+  }
+
+  :global(.rules-typing-dots span) {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent-purple);
+    animation: rules-dot-bounce 1.2s infinite;
+  }
+
+  :global(.rules-typing-dots span:nth-child(2)) {
+    animation-delay: 0.15s;
+  }
+
+  :global(.rules-typing-dots span:nth-child(3)) {
+    animation-delay: 0.3s;
+  }
+
+  @keyframes rules-dot-bounce {
+    0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-4px); }
+  }
+
+  .rules-chat-input-area {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .rules-chat-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    color: var(--color-text-primary);
+    outline: none;
+    transition: border-color 150ms;
+  }
+
+  .rules-chat-input:focus {
+    border-color: var(--color-accent-purple);
+  }
+
+  .rules-chat-input::placeholder {
+    color: var(--color-text-secondary);
+    opacity: 0.5;
+  }
+
+  .rules-chat-send {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 0.5rem;
+    background: var(--color-accent-purple);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: opacity 150ms;
+  }
+
+  .rules-chat-send:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .rules-chat-send:not(:disabled):hover {
+    opacity: 0.85;
+  }
+
   @media (max-width: 640px) {
     .rules-panel {
       width: 100vw;
@@ -291,6 +550,9 @@
 </style>
 
 <script>
+  // All innerHTML usage below operates on developer-authored content from local JSON files (trusted, no XSS risk)
+  // AI responses are also rendered through a controlled formatter, not raw user input
+
   const overlay = document.getElementById('rules-drawer')!
   const backBtn = document.getElementById('rules-back')!
   const closeBtn = document.getElementById('rules-close')!
@@ -304,6 +566,27 @@
   const fullToggle = document.getElementById('rules-full-toggle')!
   const fullEl = document.getElementById('rules-full')!
   const tocEl = document.getElementById('rules-toc')!
+  const contentEl = document.getElementById('rules-content')!
+
+  // Search elements
+  const headerNormal = document.getElementById('rules-header-normal')!
+  const headerSearch = document.getElementById('rules-header-search')!
+  const searchOpenBtn = document.getElementById('rules-search-open')!
+  const searchCloseBtn = document.getElementById('rules-search-close')!
+  const searchInput = document.getElementById('rules-search-input') as HTMLInputElement
+  const searchCount = document.getElementById('rules-search-count')!
+  const searchPrev = document.getElementById('rules-search-prev') as HTMLButtonElement
+  const searchNext = document.getElementById('rules-search-next') as HTMLButtonElement
+
+  // Chat elements
+  const chatToggle = document.getElementById('rules-chat-toggle')!
+  const chatBody = document.getElementById('rules-chat-body')!
+  const chatMessages = document.getElementById('rules-chat-messages')!
+  const chatInput = document.getElementById('rules-chat-input') as HTMLInputElement
+  const chatSend = document.getElementById('rules-chat-send') as HTMLButtonElement
+
+  // Store raw rules data for AI context
+  let currentRulesData: { summary?: string; detailed?: string; fullText?: string } = {}
 
   /**
    * Markdown-to-HTML renderer for trusted static content.
@@ -411,8 +694,279 @@
     return toc
   }
 
+  // ─── Search Logic ─────────────────────────────────────
+  let searchMatches: HTMLElement[] = []
+  let searchCurrentIdx = -1
+
+  function expandAllSections() {
+    if (!detailedSection.classList.contains('hidden') && detailedEl.classList.contains('hidden')) {
+      detailedEl.classList.remove('hidden')
+      detailedToggle.classList.add('expanded')
+    }
+    if (!fullSection.classList.contains('hidden') && fullEl.classList.contains('hidden')) {
+      fullEl.classList.remove('hidden')
+      tocEl.classList.remove('hidden')
+      fullToggle.classList.add('expanded')
+    }
+  }
+
+  function clearHighlights() {
+    searchMatches = []
+    searchCurrentIdx = -1
+    contentEl.querySelectorAll('mark.rules-highlight').forEach(mark => {
+      const parent = mark.parentNode!
+      parent.replaceChild(document.createTextNode(mark.textContent || ''), mark)
+      parent.normalize()
+    })
+  }
+
+  function highlightMatches(query: string): number {
+    clearHighlights()
+    if (!query.trim()) return 0
+
+    expandAllSections()
+
+    const lowerQuery = query.toLowerCase()
+    const walker = document.createTreeWalker(contentEl, NodeFilter.SHOW_TEXT)
+    const textNodes: Text[] = []
+    while (walker.nextNode()) {
+      textNodes.push(walker.currentNode as Text)
+    }
+
+    for (const node of textNodes) {
+      const text = node.textContent || ''
+      const lower = text.toLowerCase()
+      let startIdx = 0
+      const fragments: (string | HTMLElement)[] = []
+      let found = false
+
+      while (true) {
+        const idx = lower.indexOf(lowerQuery, startIdx)
+        if (idx === -1) break
+        found = true
+        if (idx > startIdx) {
+          fragments.push(text.slice(startIdx, idx))
+        }
+        const mark = document.createElement('mark')
+        mark.className = 'rules-highlight'
+        mark.textContent = text.slice(idx, idx + query.length)
+        fragments.push(mark)
+        startIdx = idx + query.length
+      }
+
+      if (found) {
+        if (startIdx < text.length) {
+          fragments.push(text.slice(startIdx))
+        }
+        const parent = node.parentNode!
+        for (const frag of fragments) {
+          if (typeof frag === 'string') {
+            parent.insertBefore(document.createTextNode(frag), node)
+          } else {
+            parent.insertBefore(frag, node)
+          }
+        }
+        parent.removeChild(node)
+      }
+    }
+
+    searchMatches = Array.from(contentEl.querySelectorAll('mark.rules-highlight'))
+    return searchMatches.length
+  }
+
+  function scrollToMatch(index: number) {
+    if (searchMatches.length === 0) return
+    searchMatches.forEach(m => m.classList.remove('active'))
+    searchCurrentIdx = ((index % searchMatches.length) + searchMatches.length) % searchMatches.length
+    const current = searchMatches[searchCurrentIdx]
+    current.classList.add('active')
+    current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    updateSearchUI()
+  }
+
+  function updateSearchUI() {
+    const total = searchMatches.length
+    if (total > 0) {
+      searchCount.textContent = `${searchCurrentIdx + 1}/${total}`
+      searchPrev.disabled = false
+      searchNext.disabled = false
+    } else {
+      searchCount.textContent = searchInput.value ? '0/0' : ''
+      searchPrev.disabled = true
+      searchNext.disabled = true
+    }
+  }
+
+  function openSearch() {
+    headerNormal.classList.add('hidden')
+    headerSearch.classList.remove('hidden')
+    headerSearch.style.display = 'flex'
+    searchInput.focus()
+  }
+
+  function closeSearch() {
+    headerSearch.classList.add('hidden')
+    headerSearch.style.display = ''
+    headerNormal.classList.remove('hidden')
+    searchInput.value = ''
+    clearHighlights()
+    updateSearchUI()
+  }
+
+  let searchDebounce: ReturnType<typeof setTimeout>
+  searchInput.addEventListener('input', () => {
+    clearTimeout(searchDebounce)
+    searchDebounce = setTimeout(() => {
+      const count = highlightMatches(searchInput.value)
+      if (count > 0) scrollToMatch(0)
+      else updateSearchUI()
+    }, 200)
+  })
+
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      if (e.shiftKey) scrollToMatch(searchCurrentIdx - 1)
+      else scrollToMatch(searchCurrentIdx + 1)
+    }
+    if (e.key === 'Escape') closeSearch()
+  })
+
+  searchOpenBtn.addEventListener('click', openSearch)
+  searchCloseBtn.addEventListener('click', closeSearch)
+  searchPrev.addEventListener('click', () => scrollToMatch(searchCurrentIdx - 1))
+  searchNext.addEventListener('click', () => scrollToMatch(searchCurrentIdx + 1))
+
+  // ─── AI Chat Logic ────────────────────────────────────
+  let chatHistory: { role: string; content: string }[] = []
+  let chatLoading = false
+
+  function toggleChat() {
+    const isHidden = chatBody.classList.contains('hidden')
+    chatBody.classList.toggle('hidden')
+    chatToggle.classList.toggle('expanded', isHidden)
+    if (isHidden) chatInput.focus()
+  }
+
+  function renderAIMessage(text: string): string {
+    // Controlled rendering of AI responses - converts markdown-like syntax to safe HTML
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/\n/g, '<br>')
+      .replace(/^/, '<p>')
+      .replace(/$/, '</p>')
+  }
+
+  function addMessage(role: 'user' | 'assistant', content: string) {
+    const welcome = chatMessages.querySelector('.rules-chat-welcome')
+    if (welcome) welcome.remove()
+
+    const div = document.createElement('div')
+    div.className = `rules-msg rules-msg-${role === 'user' ? 'user' : 'ai'}`
+    const bubble = document.createElement('div')
+    bubble.className = 'rules-msg-bubble'
+
+    if (role === 'user') {
+      bubble.textContent = content
+    } else {
+      // AI responses go through controlled renderAIMessage formatter
+      bubble.innerHTML = renderAIMessage(content)
+    }
+
+    div.appendChild(bubble)
+    chatMessages.appendChild(div)
+    chatMessages.scrollTop = chatMessages.scrollHeight
+  }
+
+  function addLoadingMessage(): HTMLElement {
+    const div = document.createElement('div')
+    div.className = 'rules-msg rules-msg-ai rules-msg-loading'
+    const bubble = document.createElement('div')
+    bubble.className = 'rules-msg-bubble'
+    const dots = document.createElement('span')
+    dots.className = 'rules-typing-dots'
+    dots.appendChild(document.createElement('span'))
+    dots.appendChild(document.createElement('span'))
+    dots.appendChild(document.createElement('span'))
+    bubble.appendChild(dots)
+    bubble.appendChild(document.createTextNode(' 思考中...'))
+    div.appendChild(bubble)
+    chatMessages.appendChild(div)
+    chatMessages.scrollTop = chatMessages.scrollHeight
+    return div
+  }
+
+  async function sendQuestion() {
+    const question = chatInput.value.trim()
+    if (!question || chatLoading) return
+
+    chatInput.value = ''
+    addMessage('user', question)
+
+    chatLoading = true
+    chatSend.disabled = true
+    const loadingEl = addLoadingMessage()
+
+    const rulesContent = [
+      currentRulesData.summary || '',
+      currentRulesData.detailed || '',
+      currentRulesData.fullText || '',
+    ].filter(Boolean).join('\n\n---\n\n')
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          question,
+          rulesContent,
+          history: chatHistory.slice(-18),
+        }),
+      })
+
+      loadingEl.remove()
+
+      if (!res.ok) {
+        addMessage('assistant', '抱歉，服务暂时不可用，请稍后重试。')
+      } else {
+        const data = await res.json()
+        const answer = data.answer || '暂时无法回答。'
+        addMessage('assistant', answer)
+        chatHistory.push({ role: 'user', content: question })
+        chatHistory.push({ role: 'assistant', content: answer })
+        if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20)
+      }
+    } catch {
+      loadingEl.remove()
+      addMessage('assistant', '网络错误，请检查连接后重试。')
+    } finally {
+      chatLoading = false
+      chatSend.disabled = false
+    }
+  }
+
+  chatToggle.addEventListener('click', toggleChat)
+  chatSend.addEventListener('click', sendQuestion)
+  chatInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.isComposing) {
+      e.preventDefault()
+      sendQuestion()
+    }
+  })
+
+  // ─── Drawer Open/Close ────────────────────────────────
   function openDrawer(data: any) {
-    // All content is developer-authored from local JSON files (trusted, no XSS risk)
+    currentRulesData = {
+      summary: data.summary || '',
+      detailed: data.detailed || '',
+      fullText: data.fullText || '',
+    }
+
     titleEl.textContent = data.gameName || '游戏规则'
     summaryEl.innerHTML = md(data.summary || '')
 
@@ -436,7 +990,23 @@
       fullSection.classList.add('hidden')
     }
 
-    document.getElementById('rules-content')!.scrollTop = 0
+    closeSearch()
+    chatHistory = []
+    chatBody.classList.add('hidden')
+    chatToggle.classList.remove('expanded')
+    chatMessages.textContent = ''
+    const welcomeDiv = document.createElement('div')
+    welcomeDiv.className = 'rules-chat-welcome'
+    const p1 = document.createElement('p')
+    p1.textContent = '对规则有疑问？问我吧！'
+    const p2 = document.createElement('p')
+    p2.className = 'text-xs text-text-secondary mt-1'
+    p2.textContent = 'AI 会引用规则原文回答'
+    welcomeDiv.appendChild(p1)
+    welcomeDiv.appendChild(p2)
+    chatMessages.appendChild(welcomeDiv)
+
+    contentEl.scrollTop = 0
     overlay.classList.remove('rules-closing')
     void overlay.offsetHeight
     overlay.classList.add('rules-active')
@@ -458,7 +1028,6 @@
     })
   }
   setupToggle(detailedToggle, detailedEl)
-  // Full text toggle also shows/hides the TOC
   fullToggle.addEventListener('click', () => {
     const isHidden = fullEl.classList.contains('hidden')
     fullEl.classList.toggle('hidden')
@@ -495,8 +1064,13 @@
   })
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && overlay.classList.contains('rules-active')) {
-      e.stopPropagation()
-      closeDrawer()
+      if (!headerSearch.classList.contains('hidden')) {
+        e.stopPropagation()
+        closeSearch()
+      } else {
+        e.stopPropagation()
+        closeDrawer()
+      }
     }
   })
 </script>
