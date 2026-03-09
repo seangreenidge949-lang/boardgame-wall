@@ -57,6 +57,14 @@
       <!-- Comment -->
       <p id="modal-comment" class="modal-stagger max-w-md text-lg italic leading-relaxed text-text-primary/80"></p>
 
+      <!-- Mechanism Demo -->
+      <div id="modal-mechanism-demo" class="modal-stagger hidden w-full max-w-md">
+        <div class="rounded-xl overflow-hidden bg-black/30 border border-white/5">
+          <img id="modal-mechanism-gif" src="" alt="核心机制演示" class="w-full" loading="lazy" />
+        </div>
+        <p class="text-xs text-text-secondary/60 text-center mt-1.5">核心机制演示</p>
+      </div>
+
       <!-- Rules Button -->
       <div id="modal-rules-area" class="modal-stagger w-full max-w-md">
         <button
@@ -171,6 +179,7 @@
   .modal-active .modal-stagger:nth-child(5) { transition-delay: 350ms; }
   .modal-active .modal-stagger:nth-child(6) { transition-delay: 400ms; }
   .modal-active .modal-stagger:nth-child(7) { transition-delay: 450ms; }
+  .modal-active .modal-stagger:nth-child(8) { transition-delay: 500ms; }
 </style>
 
 <script>
@@ -205,6 +214,16 @@
     elPlayers.textContent = `${data.players} 人`
     elTime.textContent = `${data.playingTime} 分钟`
     elComment.textContent = data.comment || ''
+
+    // Show/hide mechanism demo
+    const demoArea = document.getElementById('modal-mechanism-demo')
+    const demoGif = document.getElementById('modal-mechanism-gif') as HTMLImageElement | null
+    if (data.mechanismDemo && demoArea && demoGif) {
+      demoGif.src = data.mechanismDemo
+      demoArea.classList.remove('hidden')
+    } else if (demoArea) {
+      demoArea.classList.add('hidden')
+    }
 
     // Show/hide rules button
     if (data.hasRules) {

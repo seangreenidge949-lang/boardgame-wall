@@ -1,0 +1,22 @@
+{
+  "name": "boardgame-wall-animations",
+  "private": true,
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "tsx render.ts",
+    "build": "remotion render SplendorDemo out/splendor-demo.gif"
+  },
+  "dependencies": {
+    "remotion": "^4.0.0",
+    "@remotion/cli": "^4.0.0",
+    "@remotion/renderer": "^4.0.0",
+    "@remotion/bundler": "^4.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/react": "^18.0.0",
+    "tsx": "^4.0.0"
+  }
+}

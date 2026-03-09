@@ -865,7 +865,8 @@
     "comment": "宝石收集的引擎构建，三分钟学会的策略佳作",
     "thumbnail": "https://cf.geekdo-images.com/vNFe4JkhKAERzi4T0Ntwpw__previewthumb/img/UpYSCLFjM_oFFxqgCFP3ymfqZGk=/fit-in/300x320/filters:strip_icc()/pic8234167.png",
     "image": "https://cf.geekdo-images.com/vNFe4JkhKAERzi4T0Ntwpw__original/img/rqcUdtu_N4v-SpI96XVmpYHnJww=/0x0/filters:format(png)/pic8234167.png",
-    "hasRules": false
+    "hasRules": true,
+    "mechanismDemo": "https://poz5euopa7lg9km3.public.blob.vercel-storage.com/rules-images/148228/mechanism-demo.gif"
   },
   {
     "id": 126163,
@@ -1190,6 +1191,20 @@
     "hasRules": false
   },
   {
+    "id": 233261,
+    "rank": 85,
+    "name": "Tidal Blades 2: Rise of the Unfolders",
+    "nameCn": "潮汐之刃2",
+    "year": 2024,
+    "rating": 8.7,
+    "players": "1-4",
+    "playingTime": "60-120",
+    "comment": "潮起潮落间的冒险史诗，机制与叙事的完美融合",
+    "thumbnail": "https://cf.geekdo-images.com/sDEGqjbClmyWSr1Huc9-Ow__previewthumb/img/wuKG5CM248X7EWI9qQAZtp5S9mA=/fit-in/300x320/filters:strip_icc()/pic6526108.png",
+    "image": "https://cf.geekdo-images.com/sDEGqjbClmyWSr1Huc9-Ow__original/img/cWH-6NjB0xNW0-X9OGVG8TG36k4=/0x0/filters:format(png)/pic6526108.png",
+    "hasRules": true
+  },
+  {
     "id": 184842,
     "rank": 86,
     "name": "Catan Junior",
@@ -1428,6 +1443,20 @@
     "hasRules": true
   },
   {
+    "id": 177736,
+    "rank": 163,
+    "name": "A Feast for Odin",
+    "nameCn": "奥丁的盛宴",
+    "year": 2016,
+    "rating": 8.2,
+    "players": "1-4",
+    "playingTime": "30-120",
+    "comment": "维京人的资源拼图盛宴，Uwe大师的集大成之作",
+    "thumbnail": "https://cf.geekdo-images.com/s9oGMCo1fcfV4Dk3EnqLZw__previewthumb/img/VbIzyHZo-Cs0C_N-0GZpcMwz1Xw=/fit-in/300x320/filters:strip_icc()/pic3146943.png",
+    "image": "https://cf.geekdo-images.com/s9oGMCo1fcfV4Dk3EnqLZw__original/img/N1X-0JB1GapFVhl98nP4tNFXMcM=/0x0/filters:format(png)/pic3146943.png",
+    "hasRules": true
+  },
+  {
     "id": 177478,
     "rank": 277,
     "name": "IKI",
@@ -1439,6 +1468,34 @@
     "comment": "江户街头人情冷暖，一招一式皆是匠心，时间才是最狡猾的对手。",
     "thumbnail": "https://cf.geekdo-images.com/ypE6HrTY1Xvpt1XCpKlMBw__itemrep/img/78YkxWh0kuforNDF-2wTJTlKaZY=/fit-in/246x300/filters:strip_icc()/pic5960068.png",
     "image": "https://cf.geekdo-images.com/ypE6HrTY1Xvpt1XCpKlMBw__original/img/G4-gFXe9tKgnkgJOFTVO2A-Wbm4=/0x0/filters:format(png)/pic5960068.png",
+    "hasRules": true
+  },
+  {
+    "id": 281442,
+    "rank": 99999,
+    "name": "Trismegistus: The Ultimate Formula",
+    "nameCn": "Trismegistus：终极配方",
+    "year": 2019,
+    "rating": 7.6,
+    "players": "1-4",
+    "playingTime": "90-120",
+    "comment": "炼金术大师的骰子博弈，变铅为金的终极配方",
+    "thumbnail": "https://cf.geekdo-images.com/3p7c-u4I9YpHRh1ET--7KQ__previewthumb/img/2AJiIcvjhtgY6riysr8LuAc0XV8=/fit-in/300x320/filters:strip_icc()/pic5373953.jpg",
+    "image": "https://cf.geekdo-images.com/3p7c-u4I9YpHRh1ET--7KQ__original/img/XGFiRfH8Z9eygUDHgM7W4YNvspQ=/0x0/filters:format(jpeg)/pic5373953.jpg",
+    "hasRules": true
+  },
+  {
+    "id": 338476,
+    "rank": 99999,
+    "name": "Lorenzo il Magnifico: Big Box",
+    "nameCn": "卓越的洛伦佐：合集版",
+    "year": 2021,
+    "rating": 8.4,
+    "players": "2-5",
+    "playingTime": "60-120",
+    "comment": "文艺复兴巨匠的权谋之争，骰子驱动的资源博弈经典合集",
+    "thumbnail": "https://cf.geekdo-images.com/mEP17E6-KPX7oXgigks-Ww__previewthumb/img/PAfwRxu8mnGmSLNSGdwkGKE3TXI=/fit-in/300x320/filters:strip_icc()/pic6167555.jpg",
+    "image": "https://cf.geekdo-images.com/mEP17E6-KPX7oXgigks-Ww__original/img/MvJLMaouIWP5A1h_pL_2G8vEgAA=/0x0/filters:format(jpeg)/pic6167555.jpg",
     "hasRules": true
   }
 ]
